@@ -8,8 +8,8 @@
       "set-git-config-line-endings": "git config --global core.autocrlf input",
       "set-git-config-gpg-program": "git config --global --add gpg.program /usr/bin/gpg",
       "print-message-of-the-day": "echo \"bash /etc/update-motd.d/00-header\" >> ~/.bashrc",
-      "bash -lc 'bash /app/.devcontainer/etc/docker/docker.sh'",
-      "bash -lc 'bash /app/.devcontainer/etc/k3s/k3s.sh'"
+      "run-docker": "bash -lc 'bash /app/.devcontainer/etc/docker/docker.sh'",
+      "run-k3s": "bash -lc 'bash /app/.devcontainer/etc/k3s/k3s.sh'"
     },
     "postAttachCommand": {
       "print-message-of-the-day": "bash /etc/update-motd.d/00-header"
