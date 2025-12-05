@@ -1,63 +1,62 @@
 {
-	"name": "Kubernetes-in-Codespaces",
-	"dockerFile": "Dockerfile",
-
-	// do not change these if you want Docker in Docker support
-	"runArgs": ["--init", "--privileged"],
-	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
-	"overrideCommand": false,
-
-	// some base images require a specific user name
-	"remoteUser": "vscode",
-
-	// Set container specific settings
-	"settings": {
-		"terminal.integrated.defaultProfile.linux": "zsh",
-		"files.trimTrailingWhitespace": true,
-		"files.trimFinalNewlines": true,
-		"files.insertFinalNewline": true
-	},
-
-	"hostRequirements": {
-		"cpus": 4
-	},
-
-	// forward ports for the app
-	"forwardPorts": [
-		30000,
-		30080,
-		31080,
-		32000
-	],
-
-	// add labels
-	"portsAttributes": {
-		"30000": { "label": "Prometheus" },
-		"30080": { "label": "IMDb App" },
-		"31080": { "label": "Heartbeat" },
-		"32000": { "label": "Grafana" }
-	},
-
-	// Install extensions
-	"extensions": [
-		"ms-dotnettools.csharp",
-		"ms-azuretools.vscode-docker",
-		"ms-kubernetes-tools.vscode-kubernetes-tools",
-		"davidanson.vscode-markdownlint",
-		"gruntfuggly.todo-tree",
-		"mutantdino.resourcemonitor",
-		"humao.rest-client",
-		"timonwong.shellcheck",
-	],
-
-	"waitFor": "postCreateCommand",
-
-	// Use 'onCreateCommand' to run commands as part of container creation.
-	"onCreateCommand": "/bin/bash -c .devcontainer/on-create.sh",
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "/bin/bash -c .devcontainer/post-create.sh",
-
-	// Use 'postStartCommand' to run commands after the container starts.
-	"postStartCommand": "/bin/bash -c .devcontainer/post-start.sh"
-}
+    "dockerComposeFile": "./docker-compose.yml",
+    "service": "k3s-devcontainer",
+    "workspaceFolder": "/app",
+    "remoteUser": "ubuntu",
+    "postStartCommand": {
+      "set-git-config-safe-directory": "git config --global --add safe.directory ${containerWorkspaceFolder}",
+      "set-git-config-line-endings": "git config --global core.autocrlf input",
+      "set-git-config-gpg-program": "git config --global --add gpg.program /usr/bin/gpg",
+      "print-message-of-the-day": "echo \"bash /etc/update-motd.d/00-header\" >> ~/.bashrc"
+    },
+    "postAttachCommand": {
+      "print-message-of-the-day": "bash /etc/update-motd.d/00-header"
+    },
+    "postCreateCommand": {
+      "print-message-of-the-day": "bash /etc/update-motd.d/00-header"
+    },
+    "forwardPorts": ["localhost:8001"],
+    "portsAttributes": {"8001": {"protocol": "https"}},
+    "customizations": {
+      "vscode": {
+        "settings": {
+          "editor.fontSize": 12,
+          "terminal.integrated.fontSize": 12,
+          "terminal.integrated.scrollback": 1000,
+          "[markdown]": {
+            "editor.defaultFormatter": "vscode.markdown-language-features",
+            "editor.tabSize": 2
+          },
+          "editor.formatOnSave": true,
+          "evenBetterToml.formatter.allowedBlankLines": 2,
+          "files.exclude": {
+            "*.egg-info": true,
+            ".pytest_cache": true,
+            ".tox": true,
+            "__pycache__": true,
+            "build": true
+          },
+          "git.ignoreLimitWarning": true,
+          "sortLines.filterBlankLines": true,
+          "yaml.completion": true,
+          "yaml.customTags": [
+            "!encrypted/pkcs1-oaep scalar",
+            "!vault scalar"
+          ],
+          "yaml.format.enable": false,
+          "yaml.validate": true,
+          "evenBetterToml.formatter.alignComments": false,
+          "[yaml]": {
+            "editor.defaultFormatter": "redhat.vscode-yaml"
+          }
+        },
+        "extensions": [
+          "dbaeumer.vscode-eslint",
+          "esbenp.prettier-vscode",
+          "nhoizey.gremlins",
+          "redhat.vscode-yaml"
+        ]
+      }
+    }
+  }
+  
