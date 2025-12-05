@@ -7,13 +7,29 @@
       "set-git-config-safe-directory": "git config --global --add safe.directory ${containerWorkspaceFolder}",
       "set-git-config-line-endings": "git config --global core.autocrlf input",
       "set-git-config-gpg-program": "git config --global --add gpg.program /usr/bin/gpg",
-      "print-message-of-the-day": "echo \"bash /etc/update-motd.d/00-header\" >> ~/.bashrc"
+      "print-message-of-the-day": "echo \"bash /etc/update-motd.d/00-header\" >> ~/.bashrc",
+      "bash -lc 'bash /app/.devcontainer/etc/docker/docker.sh'",
+      "bash -lc 'bash /app/.devcontainer/etc/k3s/k3s.sh'"
     },
     "postAttachCommand": {
       "print-message-of-the-day": "bash /etc/update-motd.d/00-header"
     },
     "postCreateCommand": {
-      "print-message-of-the-day": "bash /etc/update-motd.d/00-header"
+      "print-message-of-the-day": "bash /etc/update-motd.d/00-header",
+      "bash -lc 'bash /app/.devcontainer/etc/docker/docker.sh'",
+      "bash -lc 'bash /app/.devcontainer/etc/k3s/k3s.sh'",
+      
+      "bash -lc '\n\
+        set -euo pipefail;\n\
+        TMPDIR=$(mktemp -d);\n\
+        cd \"$TMPDIR\";\n\
+        curl -s \"https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh\" | bash -s -- 5.8.0 \"$TMPDIR\";\n\
+        if [ -f \"$TMPDIR/kustomize\" ]; then\n\
+          sudo install -m 0755 -D \"$TMPDIR/kustomize\" /usr/local/bin/kustomize;\n\
+        fi;\n\
+        rm -rf \"$TMPDIR\";\n\
+      '"
+
     },
     "forwardPorts": ["localhost:8001"],
     "portsAttributes": {"8001": {"protocol": "https"}},
